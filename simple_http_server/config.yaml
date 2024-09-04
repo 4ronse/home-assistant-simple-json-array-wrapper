@@ -1,0 +1,13 @@
+name: "Simple HTTP Server"
+description: "A simple HTTP server that fetches and wraps JSON data"
+version: "1.0.0"
+slug: "simple_http_server"
+init: false
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+ports:
+  8000/tcp: 8000
