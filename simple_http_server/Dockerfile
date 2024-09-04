@@ -1,16 +1,21 @@
-FROM python:3.9-alpine
+# Build stage
+FROM python:3.9-alpine AS builder
 
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY server.py /app/
-COPY run.sh /app/
+COPY server.py .
 
-# Ensure correct permissions and line endings
-RUN chmod +x /app/run.sh && \
-    sed -i 's/\r$//' /app/run.sh
+# Final stage
+FROM python:3.9-alpine
 
-# Use sh to execute the script
-CMD [ "sh", "-c", "/app/run.sh" ]
+WORKDIR /app
+
+# Copy from builder stage
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /app/server.py .
+
+# Run Python directly
+CMD ["python", "/app/server.py"]
