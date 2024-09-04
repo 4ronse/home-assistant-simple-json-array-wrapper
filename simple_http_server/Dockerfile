@@ -5,9 +5,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY server.py .
-COPY run.sh .
+COPY server.py /app/
+COPY run.sh /app/
 
-RUN chmod a+x run.sh
+# Ensure correct permissions and line endings
+RUN chmod +x /app/run.sh && \
+    sed -i 's/\r$//' /app/run.sh
 
-CMD [ "/app/run.sh" ]
+# Use sh to execute the script
+CMD [ "sh", "-c", "/app/run.sh" ]
